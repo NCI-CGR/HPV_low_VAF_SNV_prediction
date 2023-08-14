@@ -94,10 +94,7 @@ Project Link: [https://github.com/NCI-CGR/HPV_low_VAF_SNV_prediction](https://gi
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
-
-* []()
-* []()
-* []()
+The work is an outcome of a collaborative effort between the researchers at the Cancer Genomics Research Laboratory ([CGR](https://dceg.cancer.gov/about/organization/cgr)), [Frederick National Laboratory](https://frederick.cancer.gov/) and the principal investigators and postdoctoral fellows at the Division of Cancer Epidemiology and Genetics ([DCEG](https://dceg.cancer.gov/)). 
 
 
 
