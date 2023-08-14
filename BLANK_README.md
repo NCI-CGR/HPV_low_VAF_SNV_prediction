@@ -86,9 +86,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email
+Sambit Mishra - sambit.mishra@nih.gov
 
-Project Link: [https://github.com/sambitmishra0628/repo_name](https://github.com/sambitmishra0628/repo_name)
+Project Link: [https://github.com/NCI-CGR/HPV_low_VAF_SNV_prediction](https://github.com/NCI-CGR/HPV_low_VAF_SNV_prediction.git)
 
 
 
