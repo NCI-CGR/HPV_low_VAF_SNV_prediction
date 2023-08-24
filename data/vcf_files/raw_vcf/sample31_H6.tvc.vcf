@@ -1,0 +1,84 @@
+##fileformat=VCFv4.1
+##fileDate=20211119
+##fileUTCtime=2021-11-19T13:03:16
+##source="tvc 5.0-3 (e975447-9fa85fb) - Torrent Variant Caller"
+##parametersName="AmpliSeq Panel - PGM - Somatic - Low Stringency"
+##parametersDetails="ampliseq_somatic_lowstringency_pgm, TS version: 5.0"
+##basecallerVersion="5.12-27/2b3c8bf"
+##tmapVersion="5.12.27 (2b3c8bf) (201907221728), 5.4.11 (e74ea9e) (201705242130)"
+##reference=/mnt/nfs/gigantor/ifs/DCEG/CGF/Sequencing/Analysis/Research/RD_reference/HPV/TMAP_Refs/HPVRef_Alphas65_Pad400_hg19/alpha_v2_2021/HPVRef_Alphas65_Pad400_hg19.fasta
+##phasing=none
+##INFO=<ID=NS,Number=1,Type=Integer,Description="Number of samples with data">
+##INFO=<ID=HS,Number=0,Type=Flag,Description="Indicate it is at a hot spot">
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Total read depth at the locus">
+##INFO=<ID=RO,Number=1,Type=Integer,Description="Reference allele observations">
+##INFO=<ID=AO,Number=A,Type=Integer,Description="Alternate allele observations">
+##INFO=<ID=SRF,Number=1,Type=Integer,Description="Number of reference observations on the forward strand">
+##INFO=<ID=SRR,Number=1,Type=Integer,Description="Number of reference observations on the reverse strand">
+##INFO=<ID=SAF,Number=A,Type=Integer,Description="Alternate allele observations on the forward strand">
+##INFO=<ID=SAR,Number=A,Type=Integer,Description="Alternate allele observations on the reverse strand">
+##INFO=<ID=FDP,Number=1,Type=Integer,Description="Flow Evaluator read depth at the locus">
+##INFO=<ID=FRO,Number=1,Type=Integer,Description="Flow Evaluator Reference allele observations">
+##INFO=<ID=FAO,Number=A,Type=Integer,Description="Flow Evaluator Alternate allele observations">
+##INFO=<ID=AF,Number=A,Type=Float,Description="Allele frequency based on Flow Evaluator observation counts">
+##INFO=<ID=QD,Number=1,Type=Float,Description="QualityByDepth as 4*QUAL/FDP (analogous to GATK)">
+##INFO=<ID=FSRF,Number=1,Type=Integer,Description="Flow Evaluator Reference observations on the forward strand">
+##INFO=<ID=FSRR,Number=1,Type=Integer,Description="Flow Evaluator Reference observations on the reverse strand">
+##INFO=<ID=FSAF,Number=A,Type=Integer,Description="Flow Evaluator Alternate allele observations on the forward strand">
+##INFO=<ID=FSAR,Number=A,Type=Integer,Description="Flow Evaluator Alternate allele observations on the reverse strand">
+##INFO=<ID=FXX,Number=1,Type=Float,Description="Flow Evaluator failed read ratio">
+##INFO=<ID=TYPE,Number=A,Type=String,Description="The type of allele, either snp, mnp, ins, del, or complex.">
+##INFO=<ID=LEN,Number=A,Type=Integer,Description="allele length">
+##INFO=<ID=HRUN,Number=A,Type=Integer,Description="Run length: the number of consecutive repeats of the alternate allele in the reference genome">
+##INFO=<ID=FR,Number=.,Type=String,Description="Reason why the variant was filtered.">
+##INFO=<ID=RBI,Number=A,Type=Float,Description="Distance of bias parameters from zero.">
+##INFO=<ID=FWDB,Number=A,Type=Float,Description="Forward strand bias in prediction.">
+##INFO=<ID=REVB,Number=A,Type=Float,Description="Reverse strand bias in prediction.">
+##INFO=<ID=REFB,Number=A,Type=Float,Description="Reference Hypothesis bias in prediction.">
+##INFO=<ID=VARB,Number=A,Type=Float,Description="Variant Hypothesis bias in prediction.">
+##INFO=<ID=SSSB,Number=A,Type=Float,Description="Strand-specific strand bias for allele.">
+##INFO=<ID=SSEN,Number=A,Type=Float,Description="Strand-specific-error prediction on negative strand.">
+##INFO=<ID=SSEP,Number=A,Type=Float,Description="Strand-specific-error prediction on positive strand.">
+##INFO=<ID=STB,Number=A,Type=Float,Description="Strand bias in variant relative to reference.">
+##INFO=<ID=STBP,Number=A,Type=Float,Description="Pval of Strand bias in variant relative to reference.">
+##INFO=<ID=PB,Number=A,Type=Float,Description="Bias of relative variant position in reference reads versus variant reads. Equals Mann-Whitney U rho statistic P(Y>X)+0.5P(Y=X)">
+##INFO=<ID=PBP,Number=A,Type=Float,Description="Pval of relative variant position in reference reads versus variant reads.  Related to GATK ReadPosRankSumTest">
+##INFO=<ID=MLLD,Number=A,Type=Float,Description="Mean log-likelihood delta per read.">
+##FILTER=<ID=NOCALL,Description="Generic filter. Filtering details stored in FR info tag.">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality, the Phred-scaled marginal (or unconditional) probability of the called genotype">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
+##FORMAT=<ID=RO,Number=1,Type=Integer,Description="Reference allele observation count">
+##FORMAT=<ID=AO,Number=A,Type=Integer,Description="Alternate allele observation count">
+##FORMAT=<ID=SRF,Number=1,Type=Integer,Description="Number of reference observations on the forward strand">
+##FORMAT=<ID=SRR,Number=1,Type=Integer,Description="Number of reference observations on the reverse strand">
+##FORMAT=<ID=SAF,Number=A,Type=Integer,Description="Alternate allele observations on the forward strand">
+##FORMAT=<ID=SAR,Number=A,Type=Integer,Description="Alternate allele observations on the reverse strand">
+##FORMAT=<ID=FDP,Number=1,Type=Integer,Description="Flow Evaluator Read Depth">
+##FORMAT=<ID=FRO,Number=1,Type=Integer,Description="Flow Evaluator Reference allele observation count">
+##FORMAT=<ID=FAO,Number=A,Type=Integer,Description="Flow Evaluator Alternate allele observation count">
+##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele frequency based on Flow Evaluator observation counts">
+##FORMAT=<ID=FSRF,Number=1,Type=Integer,Description="Flow Evaluator reference observations on the forward strand">
+##FORMAT=<ID=FSRR,Number=1,Type=Integer,Description="Flow Evaluator reference observations on the reverse strand">
+##FORMAT=<ID=FSAF,Number=A,Type=Integer,Description="Flow Evaluator Alternate allele observations on the forward strand">
+##FORMAT=<ID=FSAR,Number=A,Type=Integer,Description="Flow Evaluator Alternate allele observations on the reverse strand">
+##INFO=<ID=OID,Number=.,Type=String,Description="List of original Hotspot IDs">
+##INFO=<ID=OPOS,Number=.,Type=Integer,Description="List of original allele positions">
+##INFO=<ID=OREF,Number=.,Type=String,Description="List of original reference bases">
+##INFO=<ID=OALT,Number=.,Type=String,Description="List of original variant bases">
+##INFO=<ID=OMAPALT,Number=.,Type=String,Description="Maps OID,OPOS,OREF,OALT entries to specific ALT alleles">
+##deamination_metric=0.510638
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	sample31_H6
+HPV18_Ref	1012	.	A	T	681.586	NOCALL	AF=0.797101;AO=55;DP=69;FAO=55;FDP=69;FR=.,MINCOV<100;FRO=14;FSAF=50;FSAR=5;FSRF=12;FSRR=2;FWDB=0.0193297;FXX=0;HRUN=1;LEN=1;MLLD=110.066;OALT=T;OID=.;OMAPALT=T;OPOS=1012;OREF=A;PB=0.5;PBP=1;QD=39.5122;RBI=0.0371259;REFB=-0.0241694;REVB=0.0316969;RO=14;SAF=50;SAR=5;SRF=12;SRR=2;SSEN=0;SSEP=0;SSSB=0.056371;STB=0.530291;STBP=0.597;TYPE=snp;VARB=0.00624017;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:681:69:69:14:14:55:55:0.797101:5:50:12:2:5:50:12:2
+HPV18_Ref	1353	.	T	A	476.125	NOCALL	AF=0.616438;AO=43;DP=71;FAO=45;FDP=73;FR=.,MINCOV<100;FRO=28;FSAF=3;FSAR=42;FSRF=10;FSRR=18;FWDB=0.00398423;FXX=0;HRUN=2;LEN=1;MLLD=51.8668;OALT=A;OID=.;OMAPALT=A;OPOS=1353;OREF=T;PB=0.5;PBP=1;QD=26.089;RBI=0.0119446;REFB=-0.00748564;REVB=0.0112605;RO=28;SAF=3;SAR=40;SRF=10;SRR=18;SSEN=0;SSEP=0;SSSB=-0.443782;STB=0.751917;STBP=0.002;TYPE=snp;VARB=0.00641214;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:476:71:73:28:28:43:45:0.616438:40:3:10:18:42:3:10:18
+HPV18_Ref	2907	.	G	C	166.611	NOCALL	AF=0.761905;AO=16;DP=21;FAO=16;FDP=21;FR=.,MINCOV<100;FRO=5;FSAF=12;FSAR=4;FSRF=2;FSRR=3;FWDB=0.0640071;FXX=0;HRUN=1;LEN=1;MLLD=81.3758;OALT=C;OID=.;OMAPALT=C;OPOS=2907;OREF=G;PB=0.5;PBP=1;QD=31.7354;RBI=0.0695419;REFB=0.00977354;REVB=0.0271875;RO=5;SAF=12;SAR=4;SRF=2;SRR=3;SSEN=0;SSEP=0;SSSB=0.179477;STB=0.599866;STBP=0.157;TYPE=snp;VARB=-0.0025286;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:166:21:21:5:5:16:16:0.761905:4:12:2:3:4:12:2:3
+HPV18_Ref	3217	.	C	A	577.66	NOCALL	AF=0.854167;AO=41;DP=48;FAO=41;FDP=48;FR=.,MINCOV<100;FRO=7;FSAF=16;FSAR=25;FSRF=1;FSRR=6;FWDB=-0.0308751;FXX=0;HRUN=2;LEN=1;MLLD=57.8623;OALT=A;OID=.;OMAPALT=A;OPOS=3217;OREF=C;PB=0.5;PBP=1;QD=48.1383;RBI=0.0358224;REFB=-0.066888;REVB=0.0181652;RO=7;SAF=16;SAR=25;SRF=1;SRR=6;SSEN=0;SSEP=0;SSSB=0.0719793;STB=0.538527;STBP=0.244;TYPE=snp;VARB=0.012711;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:577:48:48:7:7:41:41:0.854167:25:16:1:6:25:16:1:6
+HPV18_Ref	4693	.	G	T	203.178	NOCALL	AF=0.857143;AO=17;DP=20;FAO=18;FDP=21;FR=.,MINCOV<100;FRO=3;FSAF=16;FSAR=2;FSRF=1;FSRR=2;FWDB=0.0426823;FXX=0;HRUN=1;LEN=1;MLLD=115.59;OALT=T;OID=.;OMAPALT=T;OPOS=4693;OREF=G;PB=0.5;PBP=1;QD=38.7005;RBI=0.0532775;REFB=0.0420318;REVB=0.0318859;RO=3;SAF=15;SAR=2;SRF=1;SRR=2;SSEN=0;SSEP=0;SSSB=0.272725;STB=0.652858;STBP=0.034;TYPE=snp;VARB=-0.00602283;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:203:20:21:3:3:17:18:0.857143:2:15:1:2:2:16:1:2
+HPV18_Ref	4772	.	G	T	255.691	NOCALL	AF=1;AO=20;DP=20;FAO=20;FDP=20;FR=.,MINCOV<100;FRO=0;FSAF=14;FSAR=6;FSRF=0;FSRR=0;FWDB=-0.0177355;FXX=0;HRUN=2;LEN=1;MLLD=59.4286;OALT=T;OID=.;OMAPALT=T;OPOS=4772;OREF=G;PB=0.5;PBP=1;QD=51.1383;RBI=0.0330608;REFB=0;REVB=-0.0279011;RO=0;SAF=14;SAR=6;SRF=0;SRR=0;SSEN=0;SSEP=0;SSSB=3.5931e-08;STB=0.5;STBP=1;TYPE=snp;VARB=-0.00157777;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:255:20:20:0:0:20:20:1:6:14:0:0:6:14:0:0
+HPV18_Ref	5119	.	G	T	135.768	NOCALL	AF=0.7;AO=14;DP=20;FAO=14;FDP=20;FR=.,MINCOV<100;FRO=6;FSAF=8;FSAR=6;FSRF=3;FSRR=3;FWDB=0.0164481;FXX=0;HRUN=3;LEN=1;MLLD=125.49;OALT=T;OID=.;OMAPALT=T;OPOS=5119;OREF=G;PB=0.5;PBP=1;QD=27.1537;RBI=0.0166831;REFB=-0.00629174;REVB=-0.00279054;RO=6;SAF=8;SAR=6;SRF=3;SRR=3;SSEN=0;SSEP=0;SSSB=0.0388347;STB=0.521708;STBP=0.724;TYPE=snp;VARB=0.00399911;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:135:20:20:6:6:14:14:0.7:6:8:3:3:6:8:3:3
+HPV18_Ref	5147	.	C	A	286.437	NOCALL	AF=1;AO=21;DP=22;FAO=22;FDP=22;FR=.,MINCOV<100;FRO=0;FSAF=11;FSAR=11;FSRF=0;FSRR=0;FWDB=0.00715602;FXX=0;HRUN=1;LEN=1;MLLD=187.062;OALT=A;OID=.;OMAPALT=A;OPOS=5147;OREF=C;PB=0.5;PBP=1;QD=52.0794;RBI=0.0546331;REFB=0;REVB=0.0541624;RO=0;SAF=11;SAR=10;SRF=0;SRR=0;SSEN=0;SSEP=0;SSSB=5.51176e-08;STB=0.5;STBP=1;TYPE=snp;VARB=0.000546192;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:286:22:22:0:0:21:22:1:10:11:0:0:11:11:0:0
+HPV18_Ref	5358	.	T	C	137.613	NOCALL	AF=0.928571;AO=13;DP=14;FAO=13;FDP=14;FR=.,MINCOV<100;FRO=1;FSAF=6;FSAR=7;FSRF=0;FSRR=1;FWDB=0.0193485;FXX=0;HRUN=6;LEN=1;MLLD=251.012;OALT=C;OID=.;OMAPALT=C;OPOS=5358;OREF=T;PB=0.5;PBP=1;QD=39.318;RBI=0.0193922;REFB=-0.00461257;REVB=-0.0013009;RO=1;SAF=6;SAR=7;SRF=0;SRR=1;SSEN=0;SSEP=0;SSSB=0.0603742;STB=0.533282;STBP=0.534;TYPE=snp;VARB=0.000330952;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:137:14:14:1:1:13:13:0.928571:7:6:0:1:7:6:0:1
+HPV18_Ref	5503	.	G	A	289.307	NOCALL	AF=1;AO=21;DP=22;FAO=22;FDP=22;FR=.,MINCOV<100,NegCov<4;FRO=0;FSAF=19;FSAR=3;FSRF=0;FSRR=0;FWDB=-0.00343957;FXX=0;HRUN=2;LEN=1;MLLD=233.872;OALT=A;OID=.;OMAPALT=A;OPOS=5503;OREF=G;PB=0.5;PBP=1;QD=52.6013;RBI=0.00355409;REFB=0;REVB=-0.000894908;RO=0;SAF=19;SAR=2;SRF=0;SRR=0;SSEN=0;SSEP=0;SSSB=-3.98875e-08;STB=0.5;STBP=1;TYPE=snp;VARB=-1.30777e-05;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:289:22:22:0:0:21:22:1:2:19:0:0:3:19:0:0
+HPV18_Ref	5619	.	T	A	74.4752	NOCALL	AF=0.692308;AO=9;DP=13;FAO=9;FDP=13;FR=.,MINCOV<100;FRO=4;FSAF=5;FSAR=4;FSRF=1;FSRR=3;FWDB=-0.0515494;FXX=0;HRUN=3;LEN=1;MLLD=213.347;OALT=A;OID=.;OMAPALT=A;OPOS=5619;OREF=T;PB=0.5;PBP=1;QD=22.9154;RBI=0.0532043;REFB=0.027795;REVB=0.0131666;RO=4;SAF=5;SAR=4;SRF=1;SRR=3;SSEN=0;SSEP=0;SSSB=0.162954;STB=0.593016;STBP=0.349;TYPE=snp;VARB=-0.0155633;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	./.:74:13:13:4:4:9:9:0.692308:4:5:1:3:4:5:1:3
+HPV18_Ref	6401	.	AG	GA,GG	1949.47	PASS	AF=0.0146341,0.756098;AO=3,153;DP=203;FAO=3,155;FDP=205;FR=.;FRO=47;FSAF=2,83;FSAR=1,72;FSRF=25;FSRR=22;FWDB=-0.00177506,-0.00357116;FXX=0;HRUN=1,1;LEN=2,1;MLLD=220.161,272.949;OALT=GA,G;OID=.,.;OMAPALT=GA,GG;OPOS=6401,6401;OREF=AG,A;PB=0.5,0.5;PBP=1,1;QD=38.0384;RBI=0.00488776,0.00379806;REFB=-0.000677698,-0.00279588;REVB=0.00455405,0.0012931;RO=47;SAF=2,81;SAR=1,72;SRF=25;SRR=22;SSEN=0,0;SSEP=0,0;SSSB=0.127291,-0.00110885;STB=0.629256,0.500834;STBP=0.694,0.967;TYPE=mnp,snp;VARB=0.00769768,0.000741641;HS	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	0/2:299:203:205:47:47:3,153:3,155:0.0146341,0.756098:1,72:2,81:25:22:1,72:2,83:25:22
+HPV18_Ref	6430	.	A	C	60.9865	PASS	AF=0.0896226;AO=19;DP=213;FAO=19;FDP=212;FR=.;FRO=193;FSAF=13;FSAR=6;FSRF=95;FSRR=98;FWDB=-0.0421812;FXX=0.00934536;HRUN=2;LEN=1;MLLD=60.8464;OALT=C;OID=.;OMAPALT=C;OPOS=6430;OREF=A;PB=0.5;PBP=1;QD=1.15069;RBI=0.0430668;REFB=-0.00167794;REVB=-0.00868885;RO=192;SAF=13;SAR=6;SRF=94;SRR=98;SSEN=0;SSEP=0;SSSB=0.22962;STB=0.675814;STBP=0.114;TYPE=snp;VARB=0.0150246	GT:GQ:DP:FDP:RO:FRO:AO:FAO:AF:SAR:SAF:SRF:SRR:FSAR:FSAF:FSRF:FSRR	0/1:60:213:212:192:193:19:19:0.0896226:6:13:94:98:6:13:95:98
