@@ -9,13 +9,8 @@
     <li>
       <a href="#about-the-project">About The Project</a>
     </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#repository-contents">Repository Contents</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -30,14 +25,9 @@ Identifying true single nucleotide variants (SNVs) existing at low variant allel
 
 We sequenced the HPV whole genome from 31 HPV18 positive samples in <b> triplicates (i.e., 31 samples x 3 reps per samples = 93 sequenced samples in total) </b> and used an in-house variant calling pipeline to detect variants in each sequenced sample. The variants identified were with respect to the reference HPV18 genome (NCBI Ref. ID AY262282). We labelled each variant with its <b> replicate frequency (the number of replicates of the sample in which the variant was detected) </b> and used the replicate frequency to identify true SNVs. Based on our underlying hypothesis, true SNVs would be detected in all (3/3) replicates, while false SNVs in 1/3 replicates of a sample. Consistent with our goal of detecting low-VAF variants, we restricted our study only to variants with VAF 1% - 60%. We then extracted sequencing features for each variant from the VCF file, supplemented them with features related to the 5' (5-prime) and 3' (3-prime) nucleotide contexts of the variant and trained Xtreme Gradient Boosting (XGBoost) binary classification models to predict true and false SNVs. We further complemented our supervised XGBoost models with an unsupervised approach [VCFgenie](https://github.com/chasewnelson/VCFgenie.git) and observed improved prediction performance. 
 
+## Installation
 
-<!-- GETTING STARTED -->
-## Getting Started
-
-The code in this repository required for training and testing the machine learning models is written in Python (v3.8) You will need access to a Linux terminal (even a Windows 10 having Windows Subsystem for Linux enabled and Ubuntu installed) to be able to execute the code. The specific instructions below work best in a Linux (Ubuntu 18.02/Ubuntu20.04) platform. Follow the steps below to install the required packages and run the scripts.
-
-
-### Installation
+The code in this repository is written in Python (v3.8) You will need access to a Linux terminal (even a Windows 10 having Windows Subsystem for Linux enabled and Ubuntu installed) to be able to execute the code. The specific instructions below work best in a Ubuntu 18.02/Ubuntu20.04 platform. Follow the steps below to install the required packages and run the scripts.
 
 1. Clone the repo
 ```sh
@@ -88,6 +78,8 @@ Options:
 ```
 
 
+
+### Repository Contents
 
 <!-- USAGE EXAMPLES -->
 ## Usage
