@@ -28,7 +28,7 @@
 ## About The Project
 Identifying true single nucleotide variants (SNVs) existing at low variant allele fractions (VAFs) is challenging, particularly because it is tricky to tease apart SNVs that are sequencing artifacts from genuine low-VAF SNVs. In this work, we present a novel machine learning technique to identify SNVs occurring at low-intermediate VAFs by using the human papillomavirus (HPV) as a case study.
 
-We sequenced the HPV whole genome from 31 HPV18 positive samples in <b><i> triplicates (i.e., 31 samples x 3 reps per samples = 93 sequenced samples in total) </b></i> and used an in-house variant calling pipeline to detect variants in each sequenced sample. The variants identified were with respect to the reference HPV18 genome (NCBI Ref. ID AY262282). We labelled each variant with its <b> replicate frequency (the number of replicates of the sample in which the variant was detected) </b> and used the replicate frequency to identify true SNVs. Based on our underlying hypothesis, true SNVs would be detected in all (3/3) replicates, while false SNVs in 1/3 replicates of a sample. Consistent with our goal of detecting low-VAF variants, we restricted our study only to variants with VAF 1% - 60%. We then extracted sequencing features for each variant from the VCF file, supplemented them with features related to the 5' (5-prime) and 3' (3-prime) nucleotide contexts of the variant and trained Xtreme Gradient Boosting (XGBoost) binary classification models to predict true and false SNVs. We further complemented our supervised XGBoost models with an unsupervised approach [VCFgenie](https://github.com/chasewnelson/VCFgenie.git) and observed improved prediction performance. 
+We sequenced the HPV whole genome from 31 HPV18 positive samples in <b> triplicates (i.e., 31 samples x 3 reps per samples = 93 sequenced samples in total) </b> and used an in-house variant calling pipeline to detect variants in each sequenced sample. The variants identified were with respect to the reference HPV18 genome (NCBI Ref. ID AY262282). We labelled each variant with its <b> replicate frequency (the number of replicates of the sample in which the variant was detected) </b> and used the replicate frequency to identify true SNVs. Based on our underlying hypothesis, true SNVs would be detected in all (3/3) replicates, while false SNVs in 1/3 replicates of a sample. Consistent with our goal of detecting low-VAF variants, we restricted our study only to variants with VAF 1% - 60%. We then extracted sequencing features for each variant from the VCF file, supplemented them with features related to the 5' (5-prime) and 3' (3-prime) nucleotide contexts of the variant and trained Xtreme Gradient Boosting (XGBoost) binary classification models to predict true and false SNVs. We further complemented our supervised XGBoost models with an unsupervised approach [VCFgenie](https://github.com/chasewnelson/VCFgenie.git) and observed improved prediction performance. 
 
 
 <!-- GETTING STARTED -->
@@ -49,10 +49,10 @@ The code in this repository required for training and testing the machine learni
   chmod +x Miniconda3-latest-Linux-x86_64.sh
   ./Miniconda3-latest-Linux-x86_64.sh
 ```
-<pre>  Follow the on-screen instructions to complete installation of miniconda and to initialize conda. </pre>
+>Follow the on-screen instructions to complete installation of miniconda and to initialize conda.
 
 3. Create a conda environment
-<pre> Create a conda environment that will include all the required packages necessary for running the repository code. We will use the <i> hpv_triplicate_env.yaml </i> file for this purpose.</pre>
+>> Create a conda environment that will include all the required packages necessary for running the repository code. We will use the <b>hpv_triplicate_env.yaml</b> file for this purpose.
 ```sh
   conda env create -f psp_gnm_env.yaml
 ```
