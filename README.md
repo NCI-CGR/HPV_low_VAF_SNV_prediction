@@ -49,10 +49,12 @@ The code in this repository required for training and testing the machine learni
   chmod +x Miniconda3-latest-Linux-x86_64.sh
   ./Miniconda3-latest-Linux-x86_64.sh
 ```
->Follow the on-screen instructions to complete installation of miniconda and to initialize conda.
+&ensp;&ensp;Follow the on-screen instructions to complete installation of miniconda and to initialize conda.
 
 3. Create a conda environment
->> Create a conda environment that will include all the required packages necessary for running the repository code. We will use the <b>hpv_triplicate_env.yaml</b> file for this purpose.
+
+&ensp;&ensp;Create a conda environment that will include all the required packages necessary for running the repository code. We will use the <b>hpv_triplicate_env.yaml</b> file for this purpose.
+
 ```sh
   conda env create -f psp_gnm_env.yaml
 ```
@@ -67,10 +69,8 @@ The code in this repository required for training and testing the machine learni
   cd HPV_low_VAF_SNV_prediction # go to the repo directory that you just cloned in Step 1
   python scripts/split_multi_allelic_var.py --help
 ```
-<pre>  The following help menu should be displayed.</pre>
+&ensp;&ensp;The following help menu should be displayed
 ```sh
-python scripts/split_multi_allelic_var.py --help
-
 Usage: split_multi_allelic_var.py [OPTIONS]
 
 Options:
