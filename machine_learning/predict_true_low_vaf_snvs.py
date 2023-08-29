@@ -104,25 +104,6 @@ def create_feature_dataframe(df_snvs, hpv_ref_file, model_type):
     """
     # Add the mutation context
     df_snvs = add_mutation_context(df_snvs, hpv_ref_file)
-    
-    # Filter features depending on model type
-    # feat_cat_dict = {'Moderate': ['FSAF','FSAR','FSRF','FSRR','FWDB','FXX','GQ','MLLD','QUAL','REFB',
-    #                             'REVB','SAF','SAR','SRF','SRR','SSSB','STB','VARB', '5_PRIME_NUCLEOTIDE_CONTEXT',
-    #                             '3_PRIME_NUCLEOTIDE_CONTEXT'],
-    #                 'Strict': ['FSAF','FSAR','FSRF','FSRR','FWDB','FXX','MLLD','QUAL','REFB','REVB','SSSB','VARB', 
-    #                        '5_PRIME_NUCLEOTIDE_CONTEXT', '3_PRIME_NUCLEOTIDE_CONTEXT'],
-    #                 'Exhaustive': ['AO','DP','FAO','FDP','FRO','FSAF','FSAR','FSRF','FSRR','FWDB',
-    #                         'FXX','GQ','HRUN','LEN','MLLD','QD','QUAL','RBI','REFB','REVB',
-    #                         'RO','SAF','SAR','SRF','SRR','SSSB','STB','STBP','VARB', '5_PRIME_NUCLEOTIDE_CONTEXT',
-    #                         '3_PRIME_NUCLEOTIDE_CONTEXT']
-    #                 }
-    # if model_type == 'FM':
-    #     feature_cols = feat_cat_dict['Exhaustive']
-    # elif model_type == 'VM':
-    #     feature_cols = feat_cat_dict['Moderate']
-    # else:
-    #     feature_cols = feat_cat_dict['Moderate']
-    # df_snvs = df_snvs[feature_cols]
     return df_snvs 
 
 def get_ensemble_prediction(y_scores_all_models):
@@ -132,7 +113,9 @@ def get_ensemble_prediction(y_scores_all_models):
     """
     median_scores = list(y_scores_all_models.median(axis=1))
     median_labels = list(map(lambda x: 0 if (round(x,2) < 0.5) else 1, median_scores))
-    return median_labels
+    # The scores are probabilities that the variant is a true variant.
+    # Score > 0.5 => variant is a true variant, score < 0.5 => variant is a false variant.
+    return median_scores, median_labels
     
 
 @click.command()
@@ -187,9 +170,10 @@ def predict_true_snvs(snv_file, model_type, outfile, hpv_ref_file):
         df_y_pred_all_models[f"Model_{str(model_num)}"] = y_pred
         df_y_scores_all_models[f"Model_{model_i}"] = y_pred_scores
     # Get the consensus predictions from all models
-    y_pred_consensus = get_ensemble_prediction(df_y_scores_all_models)
+    y_scores_consensus, y_pred_consensus = get_ensemble_prediction(df_y_scores_all_models)
     pred_label = [True if pred_i == 1 else False for pred_i in y_pred_consensus]
     df_snvs['Predicted_SNV_Type'] = pred_label
+    df_snvs['True_SNV_Probability'] = y_scores_consensus
     df_snvs.to_csv(outfile, index=False)
     print ("Done!")
     print (f"Wrote predictions to {outfile}")
