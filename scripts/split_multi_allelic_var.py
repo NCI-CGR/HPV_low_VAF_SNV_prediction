@@ -222,7 +222,7 @@ def main(vcf_dir, output_dir, num_metadata_lines):
     print ("Done!")
 
     # Write the SNPs to a .csv file
-    df_snps.to_csv(output_dir + 'snvs.csv')
+    df_snps.to_csv(output_dir + 'snvs.csv', index=False)
 
     print (f"Total SNVs = {len(df_snps)}. Wrote SNVs to {output_dir +  'snvs.csv'}")
 
