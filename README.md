@@ -46,7 +46,7 @@ The code in this repository is written in Python (v3.8) You will need access to 
 &ensp;&ensp;Create a conda environment that will include all the required packages necessary for running the repository code. We will use the <b>hpv_triplicate_env.yaml</b> file for this purpose.
 
 ```sh
-  conda env create -f psp_gnm_env.yaml
+  conda env create -f hpv_triplicate_env.yaml
 ```
 
 4. Activate the conda environment
