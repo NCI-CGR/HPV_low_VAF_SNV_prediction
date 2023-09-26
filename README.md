@@ -41,7 +41,7 @@ The code in this repository is written in Python (v3.8) You will need access to 
 &ensp;&ensp;Create a conda environment that will include all the required packages necessary for running the repository code. We will use the <b>hpv_triplicate_env.yaml</b> file for this purpose.
 
 ```sh
-  conda env create -f psp_gnm_env.yaml
+  conda env create -f hpv_triplicate_env.yaml
 ```
 
 4. Activate the conda environment
@@ -260,4 +260,4 @@ Project Link: [https://github.com/NCI-CGR/HPV_low_VAF_SNV_prediction](https://gi
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
-The work is an outcome of a collaborative effort between the researchers at the Cancer Genomics Research Laboratory ([CGR](https://dceg.cancer.gov/about/organization/cgr)), [Frederick National Laboratory](https://frederick.cancer.gov/) and the principal investigators and postdoctoral fellows at the Division of Cancer Epidemiology and Genetics ([DCEG](https://dceg.cancer.gov/)). I would like to acknowledge the scientific efforts and research guidance received from Dr. Lisa Mirabello, Dr. Meredith Yeager, Dr. Laurie Burdette, Dr. Michael Dean, Dr. Bin Zhu, Dr. Chase Nelson and Dr. Maisa Pinheiro without which this work wouldn't be complete.
+The work is an outcome of a collaborative effort between the researchers at the Cancer Genomics Research Laboratory ([CGR](https://dceg.cancer.gov/about/organization/cgr)), [Frederick National Laboratory](https://frederick.cancer.gov/) and the principal investigators and postdoctoral fellows at the Division of Cancer Epidemiology and Genetics ([DCEG](https://dceg.cancer.gov/)). I would like to gratefully acknowledge the scientific efforts and research guidance received from Dr. Lisa Mirabello, Dr. Meredith Yeager, Dr. Laurie Burdette, Dr. Michael Dean, Dr. Bin Zhu, Dr. Chase Nelson and Dr. Maisa Pinheiro without which this work wouldn't be complete.
