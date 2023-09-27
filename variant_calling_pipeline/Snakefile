@@ -1,0 +1,223 @@
+# vim: ft=python
+import sys
+sys.path.append('config') # puts the config directory in pythonpath
+import config_functions as cf
+import os
+import collections
+import glob
+import itertools
+import pandas
+import pysam
+from Bio import SeqIO
+from Bio.SeqIO import FastaIO
+from Bio.Seq import Seq
+
+configfile: 'config/hpv_config.yaml'
+workdir: os.environ['PWD']
+shell.executable('bash')
+
+#report: 'reports/%s_pipeline_summary.rst'
+
+
+# set some universal reference variables based on the config file
+hpv_ref = config['hpv_reference'] # currently, all bams are initially mapped to alpha reference
+hpv_types = sorted(config['hpv_types']) # list of just the type numbers (e.g. ['16, '31', '35'])
+# TODO - check if this is needed. check if we can throw out glu yet.
+cov_dev = config['cov_dev'] # this is used for glu coverage script
+GENES = config['genes'] # list of genes in gtf
+
+# create a dictionary of the true length of each type's genome
+# note that this dictionary has HPV##_Ref as the key and not just the list of numbers that's in hpv_types!
+# even if using the universal panel, all 13 HR types should be listed in the config file.
+bed = {} # bed['HPV16_Ref'] = 7906
+for hpv in hpv_types:
+    with open(config['single_len_bed'] %hpv, 'r') as len_file:
+        line = len_file.readline()
+        (hpvtype, length) = (line.split()[0], int(line.split()[2]))
+        if config['padding'] == True:
+            bed[hpvtype] = length - 400
+        else:
+            bed[hpvtype] = length
+
+
+
+# the filename/ID parsing functions can be found in the config/config_functions.py and may need to be changed for each run
+d = collections.defaultdict(list) # this dictionary has all files - samples and blanks
+bamfiles = glob.glob(config['tmap_path'])
+for key, value in itertools.groupby(bamfiles, lambda pname: cf.parse_sampleID(pname.split('/')[-1], config['cohort'])):
+    d[key] += list(value) #sometimes a sample may have multiple files
+
+sampleIDs = d.keys()
+
+samples_only = [x for x in sampleIDs if x.startswith(tuple(config['cohort']))]
+print (samples_only)
+blanks = [x for x in sampleIDs if not x.startswith(tuple(config['cohort']))]
+
+include: 'config/targets_Snakefile'
+for wf in config['workflows']:
+    include: wf
+
+# the subworkflow targets are specified in targets_Snakefile and added back to the main targets
+TARGETS += WFTARGETS
+
+# also check samples for low coverage
+TARGETS += ['flags/idx_stats_qc.txt']
+
+
+
+localrules: all
+
+#--------------------------------------------------------------------------
+rule all:
+    input: TARGETS
+
+def input_bams(wildcards):
+    return d[wildcards.sampleID]
+
+#--------------------------------------------------------------------------
+
+# set up references for this project run
+# even if the universal panel is used, specify the hpv types in the config so that these files generate properly
+def amp_input(panel):   # check if we should use single panels or the universal panel amplicon bed
+    if panel == 'universal':
+        return [config['universal_amplicon_bed']]
+    else:
+        return expand(config['single_amplicon_bed'] %'{hpvtype}', hpvtype=hpv_types)
+
+
+def len_input(panel): # check if we should use single panels or the universal panel length bed
+    if panel == 'universal':
+        return [config['universal_len_bed']]
+    else:
+        return expand(config['single_len_bed'] %'{hpvtype}', hpvtype=hpv_types)
+
+
+rule amplicon_bed:
+    input: amp_input(config['panel'])
+    output: 'refs/%s.amplicon.bed' %config['project_name']
+    run:
+        shell('cat {input} > {output}')
+        shell('sed -i "/^track/d" {output}') # remove lines that start with 'track'
+
+
+rule amplicon_unique:
+    input: rules.amplicon_bed.output
+    output: 'refs/%s.amplicon.unique_regions.bed' %config['project_name']
+    params: # divide the original bam into two bams with odd lines going to one and even to the other
+        abed = 'temp/a.bed',
+        bbed = 'temp/b.bed',
+        abbed = 'temp/ab.bed',
+        babed = 'temp/ba.bed'
+    shell:
+        """
+        awk '{{ if (NR%2) print > "{params.abed}"; else print > "{params.bbed}" }}' {input}
+        bedtools subtract -a {params.abed} -b {params.bbed} > {params.abbed}
+        bedtools subtract -a {params.bbed} -b {params.abed} > {params.babed}
+        cat {params.abbed} {params.babed} | bedtools sort -i - > {output}
+        """
+
+
+rule length_bed:
+    input: len_input(config['panel'])
+    output: 'refs/%s.len.bed' %config['project_name']
+    run:
+        shell('cat {input} > {output}')
+
+
+rule type_fastas: # this pipeline can handle any alpha HPV type, not just HR
+    input: config['hpv_ref_nobreak']
+    output: expand('refs/HPV{hpv_type}.fasta', hpv_type=hpv_types)
+    run:
+        for hpv in hpv_types:
+            shell('grep -A1 "HPV%s_" {input} > refs/HPV%s.fasta' %(hpv, hpv))
+
+
+rule create_germline_json:
+    input: config['tvc_param_template']['germline']
+    output: 'refs/%s.germline.tvc.json' %config['project_name']
+    run:
+        shell('cp {input} {output}')
+        shell("sed -i 's/allele_freq\":0.50/allele_freq\":%s/g' {output}" %config['tvc_min_af']['germline'])
+        shell("sed -i 's/min_coverage\":6/min_coverage\":%s/g' {output}" %config['tvc_min_cov']['germline'])
+
+
+#### do any necessary merging and quality filtering
+rule merge_or_link:
+    input: input_bams
+    output: 'bams/{sampleID}.bam'
+    params:
+        bam = 'temp/{sampleID}/{sampleID}.temp.bam',
+        sam = 'temp/{sampleID}/{sampleID}.temp.sam'
+    run:
+        if (len(input) > 1):
+            print(os.path.dirname(params.bam))
+            shell('mkdir -p %s' %os.path.dirname(params.bam))
+            shell('samtools merge {params.bam} {input}')
+            sam = pysam.Samfile(params.bam, 'rb')
+            header = sam.header.to_dict()
+            newRG = []
+            for i in header['RG']:
+                i['SM'] = wildcards.sampleID
+                newRG.append(i)
+            header['RG'] = newRG
+
+            outfile = pysam.Samfile(params.sam, 'wh', header=header) # this is old pysam syntax...
+
+            # add the reads from the original merged bam
+            shell('samtools view {params.bam} >> {params.sam}')
+
+            # convert back to bam
+            shell('samtools view -h -b {params.sam} > {output}')
+            shell('rm {params.bam} {params.sam}') 
+        else:
+            shell('cd bams; ln -s ../{input} {wildcards.sampleID}.bam && touch -h {wildcards.sampleID}.bam')
+
+#--------------------------------------------------------------------------
+rule mapq_filter:
+    input: rules.merge_or_link.output
+    output: 'mapq_filter/{sampleID}.filtered.bam'
+    threads: 8
+    params: 
+        mapq = int(config["aq_filter"]),
+        pre =  'temp/{sampleID}/{sampleID}.sort.temp'
+    run:
+        shell('mkdir -p %s' %os.path.dirname(params.pre))
+        shell('samtools view -h -q {params.mapq} {input} | \
+                samtools sort -o {output} -@ {threads} -T {params.pre} -')
+        shell('samtools index {output}')
+
+
+rule link_blanks:
+    input: 'mapq_filter/{blank}.filtered.bam'
+    output: 'blanks_bam/{blank}.filtered.bam'
+    run:
+        shell('cd blanks_bam; ln -s ../{input} .')
+
+
+rule idx_stats:
+    input: rules.mapq_filter.output
+    output: 'idxstats/{sampleID}.idxstats.txt'
+    run:
+        shell('samtools idxstats {input} > {output}')
+
+
+rule flag_idx_stats:
+    input: expand('idxstats/{sampleID}.idxstats.txt', sampleID=sampleIDs)
+    output: 'flags/idx_stats_qc.txt'
+    run:
+        dfs = []
+        for fname in input:
+            temp = pandas.read_csv(fname, sep='\t', names=['chr', 'len', 'cov', '0'])
+            temp = temp[temp['chr'].str.startswith('HPV')]
+            if temp['cov'].max() < config['qc_min_reads']:
+                temp['sampleID'] = fname.split('/')[-1].split('.')[0]
+                temp = temp[temp['cov'] > 0]
+                dfs.append(temp)
+
+        if len(dfs) > 0:
+            df = pandas.concat(dfs)
+            df.to_csv(output[0], sep='\t', index=False)
+        else:
+            shell('touch {output}')
+
+

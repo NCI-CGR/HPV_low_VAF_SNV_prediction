@@ -1,0 +1,70 @@
+# Update with the correct path to the bam files
+tmap_path:  path_to_bams/*bam
+
+hpv_types:
+    - '18'
+
+padding: True
+
+panel: single
+
+# Prefix for the bam files. The bams should start with this prefix.
+cohort:
+    - sample
+
+# Name of the output directory
+project_name: HPV18_out
+
+workflows:
+    - qc_Snakefile
+    - lowAF_Snakefile
+
+# Replace the path variable with the appropriate path
+tvc_param_template:
+    somatic: path/HPV_low_VAF_SNV_prediction/variant_calling_pipeline/refs/HPV18.somatic.tvc.json
+
+tvc_min_af: 
+    somatic: 0.02
+
+tvc_min_cov: 
+    somatic: 100
+
+### QC parameters ###
+
+# mapq threshold
+aq_filter: 4
+
+qc_min_reads: 3000
+
+#######  Reference Files ##### 
+
+# Update the "path" placeholder with the appropriate path
+hpv_reference: path/HPV_low_VAF_SNV_prediction/variant_calling_pipeline/refs/HPV18.fasta
+hpv_ref_nobreak: path/HPV_low_VAF_SNV_prediction/variant_calling_pipeline/refs/HPV18_no_breaks.fasta
+single_amplicon_bed: path/HPV_low_VAF_SNV_prediction/variant_calling_pipeline/refs/HPV%s.amplicon.bed
+single_len_bed: path/HPV_low_VAF_SNV_prediction/variant_calling_pipeline/refs/HPV%s.len.bed 
+
+# Tools and packages
+# Update the "path" placeholder with the appropriate path
+vc_bin: path/tvc-5.0.3/bin
+vc_pipe: path/tvc-5.0.3/bin/variant_caller_pipeline.py
+
+# SNPEFF - The SNPEff database needs to be created before running this pipeline.
+# Replace the "path" placeholder with the appropriate path.
+snpeff: path/snpEff
+# Name the database as hpv18 to rename below to match the database name
+snpeff_db: hpv18 
+# Replace the "path" placeholder below to the appropriate path
+genes_bed: path/HPV_low_VAF_SNV_prediction/variant_calling_pipeline/refs/HPV18.genes.bed
+
+genes:
+    - E1
+    - E2
+    - E4
+    - E5
+    - E6
+    - E7
+    - E8
+    - L1
+    - L2
+

@@ -1,0 +1,34 @@
+# vim: ft: ft=python
+
+workdir: os.environ['PWD']
+shell.executable('bash')
+
+localrules: targets_all
+
+WFTARGETS = []
+
+# qc_Snakefile that includes fastqc reports
+if 'qc_Snakefile' in config['workflows']:
+    qc_targets = [
+    expand('posttrim_qc/{sampleID}.filtered_fastqc.zip', sampleID=sampleIDs),
+    ['reports/filtered_read_count.tsv'],
+    expand('blanks_bam/{blank}.filtered.bam', blank=blanks),
+    ['flags/blank_qc.txt'],
+    ]
+    WFTARGETS += qc_targets
+
+
+# lowAF_Snakefile uses a somatic TVC json to look for low AF variants
+if 'lowAF_Snakefile' in config['workflows']:
+    lowaf_targets = [
+    'reports/%s_all_vcf_tables_lowaf.txt' %config['project_name'],
+    'reports/%s_lowaf_histogram.png' %config['project_name'],
+    expand('lowaf_af_histo/{sample_only}.lowaf.png', sample_only=samples_only)
+    ]
+    WFTARGETS += lowaf_targets
+
+
+rule targets_all:
+    input: WFTARGETS
+
+

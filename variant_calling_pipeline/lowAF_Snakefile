@@ -1,0 +1,246 @@
+# vim: ft=python
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+configfile: 'config/hpv_config.yaml'
+workdir: os.environ['PWD']
+shell.executable('bash')
+
+# currently, this pipeline runs the trimmed fastqs through TVC a second time using somatic settings. 
+# The result is a second set of vcf files with the low AF calls.
+
+
+localrules: lowaf_all
+
+
+rule lowaf_all:
+    input: lowaf_targets
+
+
+
+rule create_somatic_json:
+    input: config['tvc_param_template']['somatic']
+    output: 'refs/%s.somatic.tvc.json' %config['project_name']
+    run:
+        shell('cp {input} {output}')
+        shell("sed -i 's/allele_freq\":0.02/allele_freq\":%s/g' {output}" %config['tvc_min_af']['somatic'])
+        shell("sed -i 's/min_coverage\":100/min_coverage\":%s/g' {output}" %config['tvc_min_cov']['somatic'])
+        shell("sed -i 's/use_position_bias\":0/use_position_bias\":1/g' {output}") 
+        # note that this keeps the freebayes alt allele freq at 0.01.
+        # If we want to change it, we'll need another sed call.
+		# I have set the use_position_bias to re-run the low af variant calling. 
+		# The goal is to filter out some of the false positive variants called.
+
+
+rule lowaf_variant_call: 
+# standard somatic calls with no het settings (modified from original het somatic)
+# use the original "germline" vcf as a hotspot file in case some variants get lost due to somatic coverage filters
+    input:
+        bam = 'mapq_filter/{sample_only}.filtered.bam',
+        ampbed = 'refs/%s.amplicon.bed' %config['project_name'],
+        lenbed = 'refs/%s.len.bed' %config['project_name'],
+        hot = 'tvc/{sample_only}/TSVC_variants.vcf',
+        param = 'refs/%s.somatic.tvc.json' %config['project_name']
+    output:
+        vcf = 'lowaf_tvc/{sample_only}/TSVC_variants.vcf',
+        bam = 'lowaf_tvc/{sample_only}/{sample_only}.ptrim.bam'
+    threads: 8
+    params:
+        pipe = config["vc_pipe"],
+        out = ' lowaf_tvc/{sample_only}',
+        vc_bin = config["vc_bin"],
+    run:
+        shell('python {params.pipe} \
+        --input-bam {input.bam} \
+        --postprocessed-bam {output.bam} \
+        --primer-trim-bed {input.ampbed} \
+        --reference-fasta {hpv_ref} \
+        --hotspot-vcf {input.hot} \
+        --num-threads {threads} \
+        --output-dir {params.out} \
+        --parameters-file {input.param} \
+        --bin-dir {params.vc_bin} \
+        --region-bed {input.lenbed}')
+# --hotspot-vcf {input.hot} \
+
+rule lowaf_adjust_padding:
+    input: rules.lowaf_variant_call.output[0] # the vcf
+    output: 'lowaf_tvc_vcf/{sample_only}.tvc_no_pad.vcf'
+    params: temp = 'temp/{sample_only}.temp.lowaf.vcf'
+    run:
+        shell('mkdir -p temp')
+        outdir = output[0].split('/')[0]
+        if config['padding'] == False:
+            shell('cd %s; ln -s ../{input} {wildcards.sample_only}.tvc_no_pad.vcf' %outdir)
+        else:
+            vcf = open(input[0], 'r')
+            outfile = open(output[0], 'w')
+            need_sort = False
+
+            for line in vcf:
+                if line.startswith('#'):
+                    outfile.write(line)
+                else:
+                    type = line.split()[0]
+                    hpv_len = bed[type]
+                    loc = line.split()[1]
+                    if int(loc) > hpv_len:
+                        new_loc = int(loc) - hpv_len
+                        outfile.write(line.replace(loc, str(new_loc), 1))
+                        need_sort = True
+                    else:
+                        outfile.write(line)
+            vcf.close()
+            outfile.close()
+
+            if need_sort == True:
+                shell('vcf-sort -c {output} > {params.temp}')
+                shell('mv {params.temp} {output}')
+
+
+rule bgzip_vcfs:
+    input: 
+        germ = 'tvc_vcf/{sample_only}.tvc_no_pad.vcf',
+        low = 'lowaf_tvc_vcf/{sample_only}.tvc_no_pad.vcf'
+    output:
+        germ = 'bgzip_vcf/{sample_only}.germline.vcf.gz',
+        low = 'bgzip_vcf/{sample_only}.somatic.vcf.gz',
+        idx = 'bgzip_vcf/{sample_only}.somatic.vcf.gz.csi'
+    run:
+        shell('bgzip -c {input.germ} > {output.germ}')
+        shell('bgzip -c {input.low} > {output.low}')
+        shell('bcftools index {output.germ}')
+        shell('bcftools index {output.low}')
+
+
+# if concatenating the germline vcf and lowAF vcf, use the pre-annotated vcf with padding removed
+rule concat_vcfs:
+    input:
+        germ = 'bgzip_vcf/{sample_only}.germline.vcf.gz',
+        low = 'bgzip_vcf/{sample_only}.somatic.vcf.gz'
+    output: 'combined_vcf/{sample_only}.combined.tvc_no_pad.vcf'
+    run:
+        shell('bcftools concat -o {output} -O v \
+                --allow-overlaps \
+                --remove-duplicates \
+                {input.low} {input.germ}')
+
+
+
+# also switching to no-blanks here so that blanks are not delivered
+rule lowaf_annotate:
+    #input: rules.concat_vcfs.output
+    input: 'lowaf_tvc_vcf/{sample_only}.tvc_no_pad.vcf'
+    output:
+        'lowaf_tvc_ann/{sample_only}.ann.lowaf.vcf',
+        'lowaf_tvc_ann/{sample_only}_snpEff.summary.lowaf.csv'
+    params:
+        snpeff = config['snpeff'],
+        bed = config['snpeff_bed'],
+        db = config['snpeff_db']
+    run:
+        shell('java -Xmx2g -jar {params.snpeff}/snpEff.jar \
+                -ud 0 -interval {params.bed} \
+                -csvStats \
+                -stats {output[1]} \
+                -c {params.snpeff}/snpEff.config {params.db} {input} > {output[0]}')
+
+#--------------------------------------------------------------------------
+rule lowaf_snpeff_report:
+    input: expand('lowaf_tvc_ann/{sample_only}_snpEff.summary.lowaf.csv', sample_only=samples_only)
+    output: 'multiqc/snpeff_report_lowaf.html'
+    run:
+        shell('multiqc -f -d tvc_ann -n snpeff_report_lowaf -o multiqc')
+
+
+def parse_field(INFO, field):
+    # pass the entire INFO column and the field you want to isolate
+    if field + '=' in INFO:
+        return INFO.split(field + '=')[1].split(';')[0]
+    else:
+        return ''
+
+# TODO - use gatk VariantsToTable and --split-multi-allelic=True
+rule lowaf_parse_INFO:
+    input: rules.lowaf_annotate.output[0]
+    output: 'lowaf_vcf_tables/{sample_only}.ann.vcf.txt'
+    run:
+        # count the number of header lines and make a list of all INFO fields
+        infile = open(input[0], 'r')
+        head_lines = 0 # so you know how many to pass to skiprows later
+        fields = []
+        for line in infile:
+            if line.startswith('#') == False:
+                break #this happens if a sample has no variants called
+            else:
+                head_lines += 1
+            if 'ID=' in line:
+                field = line.split('ID=')[1].split(',')[0]
+                fields.append(field)
+        infile.close()
+
+        # import the vcf and parse the INFO column
+        try: # check for empty dataframes
+            df = pandas.read_table(input[0], skiprows=head_lines-1, sep='\t') # -1 keeps the original column headers
+            col10 = df.columns.tolist()[-1]
+            df.rename(columns={col10:'sample_col'}, inplace=True) # the 10th column needs standardized name
+            cols = df.columns.tolist()
+            df['sample_only'] = wildcards.sample_only
+            df = df[['sample_only'] + cols] # make sample ID the first column
+            field_cols = []
+            for field in fields: # create a column for each field
+                df[field] = df.INFO.apply(lambda x: parse_field(x, field))
+                field_cols.append(field)
+            df = df[['sample_only'] + cols + field_cols] # reorder the columns in the spreadsheet
+            df.to_csv(output[0], sep='\t', index=False)
+
+        except:
+            errormess = wildcards.sample_only + ': no variants called'
+            shell('echo %s > {output}' %errormess)
+            
+rule lowaf_cat_vcf_tables:
+    input: expand('lowaf_vcf_tables/{sample_only}.ann.vcf.txt', sample_only=samples_only)
+    output: 'reports/%s_all_vcf_tables_lowaf.txt' %config['project_name']
+    run:
+        dfs = []
+        cols = []
+        for fname in input:
+            temp = pandas.read_table(fname, sep='\t')
+            cols = temp.columns
+            if len(temp) > 1: # make sure empty vcfs don't mess up the headers
+                dfs.append(temp)
+        df = pandas.concat(dfs)
+        df = df[cols] # reorder the columns in the spreadsheet
+        df.to_csv(output[0], sep='\t', index=False)
+
+# right now, only the first allele will be plotted. TODO use --split-multi-allele to recover the rest
+rule lowaf_af_histogram_all:
+    input: 'reports/%s_all_vcf_tables_lowaf.txt' %config['project_name']
+    output: 'reports/%s_lowaf_histogram.png' %config['project_name']
+    run:
+        df = pandas.read_csv(input[0], sep='\t')
+        df['AF_primary'] = df['AF'].apply(lambda x: x.split(',')[0])
+        df['AF_primary'] = df['AF_primary'].astype(float)
+
+        sns.distplot(df['AF_primary'], kde=False, color="b")
+        plt.savefig(output[0])
+
+
+rule lowaf_af_histogram_each:
+    input: 'lowaf_vcf_tables/{sample_only}.ann.vcf.txt'
+    output: 'lowaf_af_histo/{sample_only}.lowaf.png'
+    run:
+        df = pandas.read_csv(input[0], sep='\t')
+        if 'AF' in df.columns.tolist():
+            df['AF_primary'] = df['AF'].apply(lambda x: str(x).split(',')[0])
+            df['AF_primary'] = df['AF_primary'].astype(float)
+
+            sns.distplot(df['AF_primary'], kde=False, color="b")
+            plt.savefig(output[0])
+        else:
+            shell('echo "" > {output}') # dummy file if the vcf was empty
+
+

@@ -1,0 +1,9 @@
+HPV18_Ref	104	581	HPV18 E6	.	+	protein_coding	gene	0	gene_id "HPV18 E6"; gene_name "HPV18 E6"; transcript_id "HPV18 E6"; transcript_name "HPV18 E6"; gene_biotype "HPV18 E6";
+HPV18_Ref	589	907	HPV18 E7	.	+	protein_coding	gene	0	gene_id "HPV18 E7"; gene_name "HPV18 E7"; transcript_id "HPV18 E7"; transcript_name "HPV18 E7"; gene_biotype "HPV18 E7";
+HPV18_Ref	913	2887	HPV18 E1	.	+	protein_coding	gene	0	gene_id "HPV18 E1"; gene_name "HPV18 E1"; transcript_id "HPV18 E1"; transcript_name "HPV18 E1"; gene_biotype "HPV18 E1";
+HPV18_Ref	1322	1357	HPV18 E8	.	+	protein_coding	gene	0	gene_id "HPV18 E8"; gene_name "HPV18 E8"; transcript_id "HPV18 E8"; transcript_name "HPV18 E8"; gene_biotype "HPV18 E8";
+HPV18_Ref	2816	3914	HPV18 E2	.	+	protein_coding	gene	0	gene_id "HPV18 E2"; gene_name "HPV18 E2"; transcript_id "HPV18 E2"; transcript_name "HPV18 E2"; gene_biotype "HPV18 E2";
+HPV18_Ref	3417	3684	HPV18 E4	.	+	protein_coding	gene	0	gene_id "HPV18 E4"; gene_name "HPV18 E4"; transcript_id "HPV18 E4"; transcript_name "HPV18 E4"; gene_biotype "HPV18 E4";
+HPV18_Ref	3935	4157	HPV18 E5	.	+	protein_coding	gene	0	gene_id "HPV18 E5"; gene_name "HPV18 E5"; transcript_id "HPV18 E5"; transcript_name "HPV18 E5"; gene_biotype "HPV18 E5";
+HPV18_Ref	4243	5632	HPV18 L2	.	+	protein_coding	gene	0	gene_id "HPV18 L2"; gene_name "HPV18 L2"; transcript_id "HPV18 L2"; transcript_name "HPV18 L2"; gene_biotype "HPV18 L2";
+HPV18_Ref	5429	7136	HPV18 L1	.	+	protein_coding	gene	0	gene_id "HPV18 L1"; gene_name "HPV18 L1"; transcript_id "HPV18 L1"; transcript_name "HPV18 L1"; gene_biotype "HPV18 L1";
