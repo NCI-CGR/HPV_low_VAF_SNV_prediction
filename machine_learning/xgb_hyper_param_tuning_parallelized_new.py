@@ -1,8 +1,12 @@
-### Updated version - Now includes testing for 50 iterations using
-### 50 seeds. Additionally, the seeds are no longer manually included
-### in the code. Rather, we select the seeds as numbers between 1 and 500.
+### Train and test models using all the hyperparameter combinations.
+### Includes testing for 50 iterations using
+### 50 seeds. 
 ### The training/testing split is performed at the sample-level: 25 samples for trainig
 ### and 6 for testing.
+
+### It takes a lot of time for this script to run - I have therefore parallelized items
+### to run on multiple cores. The user will need to run separate instances of this script
+### for each of the FM, VM and FVM prediction strategies.
 
 import pandas as pd
 import seaborn as sns
@@ -163,23 +167,6 @@ def get_ensemble_prediction_scores(y_scores_all_models):
     median_scores = list(y_scores_all_models.median(axis=1))
     median_scores = [round(score_i,2) for score_i in median_scores]
     return median_scores
-
-def map_sample_replicate(df_snvs):
-    """
-    Assign a numeric replicate number to the current sample
-    and return as a dictionary
-    """
-    sample_ids_with_rep = list(set(df_snvs['sample'].to_list()))
-    sample_rep_map = {}
-    for id_i in sample_ids_with_rep:
-        if id_i in sample_rep_map.keys():
-            continue
-        id_i_triplicate = [s for s in sample_ids_with_rep if s.startswith(id_i.split('_')[0]+'_')]
-        #print (id_i_triplicate)
-        id_i_triplicate.sort() # sort in ascending order
-        for id_x, rep_num in zip(id_i_triplicate, list(range(1,4))):
-            sample_rep_map[id_x] = rep_num
-    return sample_rep_map
 
 
 # Instead of doing a 5-fold CV, we will perform training and testing on the given set of samples.
