@@ -1,9 +1,8 @@
 ### Updated version - Now includes testing for 50 iterations using
 ### 50 seeds. Additionally, the seeds are no longer manually included
 ### in the code. Rather, we select the seeds as numbers between 1 and 500.
-### Also, in contrast to v2, instead of doing a 5-fold CV, we will perform training and testing on the given set of samples.
-### That is, instead of further breaking the training set into training and validation, we will use the
-### entire training set for training on the given hyperparameter combination and testing on the given testing data.
+### The training/testing split is performed at the sample-level: 25 samples for trainig
+### and 6 for testing.
 
 import pandas as pd
 import seaborn as sns
