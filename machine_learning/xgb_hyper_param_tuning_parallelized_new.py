@@ -23,8 +23,6 @@ import psutil
 warnings.filterwarnings("ignore") # Will suppress any unnecessary warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-
-
 # ML libraries
 import numpy as np
 from xgboost import XGBClassifier
@@ -36,8 +34,6 @@ from sklearn.metrics import f1_score, precision_score, recall_score, matthews_co
 from sklearn.metrics import mean_squared_error, cohen_kappa_score, make_scorer
 from sklearn.metrics import confusion_matrix, accuracy_score, average_precision_score, ConfusionMatrixDisplay
 
- # Plot settings
-sns.set_style('ticks')
 
 def remove_low_coverage_samples(df_snv_w_cov, min_cov_cutoff, coverage_column):
     """
