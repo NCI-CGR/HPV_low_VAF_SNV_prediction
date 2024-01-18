@@ -1,5 +1,5 @@
 
-# Predicting True Low-VAF SNVs in the Human Papillomavirus 
+# Predicting True Low-VAF Intrahost SNVs in Human Papillomavirus 
 
 
 <!-- TABLE OF CONTENTS -->
