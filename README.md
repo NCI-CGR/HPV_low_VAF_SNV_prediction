@@ -101,7 +101,7 @@ Now we will go through some specific examples of how to use this repository.
 
 Following is an example of the performance output. Below is a snapshot of the performance results for the FM model as observed in the <b> performance_FM.csv </b> file. Specifically, I am showing the performance for the optimal parameter/feature combination for FM by applying the following filters: <i> True_Var_Def = 1 (i.e., 3/3 replicates), False_Var_Def = 0.33 (i.e., 1/3 replicates), VAF_Lower_Limit = 0.01, VAF_Upper_Limit = 0.5, Feature_Category = Strict. </i> Note: I am only showing the first 10 rows.
 
-As you will observe there are 50 rows after applying the above filters, each row reports performance on a separate testing dataset obtained by randomly sampling with a different seed. The overall performance for this combination is obtained by calculating the median of each metric column (and is reported in the `results/cumulative_perf_metrics` directory). A 
+As you will observe there are 50 rows after applying the above filters, each row reports performance on a separate testing dataset obtained by randomly sampling with a different seed. The overall performance for this combination is obtained by calculating the median of each metric column (and is reported in the `results/cumulative_perf_metrics` directory).
 
  | Seed | True_Var_Def | False_Var_Def | VAF_Lower_Limit | VAF_Upper_Limit | Feature_Category | Num_True_Var_Testing | Num_False_Var_Testing | TP | FP  | TN   | FN  | AUC      | MCC     | F1_score | Accuracy | MSE   |
 | ---- | ------------ | ------------- | --------------- | --------------- | ---------------- | -------------------- | --------------------- | -- | --- | ---- | --- | -------- | ------- | -------- | -------- | ----- |
