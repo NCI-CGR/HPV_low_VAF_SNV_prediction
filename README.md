@@ -201,7 +201,7 @@ python ../VCFgenie/VCFgenie.py --error_rate=0.00012936 --p_cutoff=0.000005420054
 
 You will notice that once VCFgenie has finished running, a directory *VCFgenie_output* is created that contains the filtered/processed vcf files. The log output from VCFgenie can be found in the file vcfgenie.out.
 
-Next, we will compile a csv file from the vcf files that will only contain iSNVs. As in [Example 2](#example-2-predicting-true-snvs-using-the-raw-vcf-files), we will use the <i> split_multi_allelic_var.py </i> script to perform this operation.
+Next, we will compile a csv file from the vcf files that will only contain iSNVs. As in [Example 2](#example-2-predicting-true-isnvs-using-the-raw-vcf-files), we will use the <i> split_multi_allelic_var.py </i> script to perform this operation.
 
 ```sh
 # Go back to the parent directory
